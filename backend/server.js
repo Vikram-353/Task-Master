@@ -8,6 +8,7 @@ import { log } from "console";
 // import { connect } from "http2";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import taskRoutes from "./routes/taskRoutes.js";
 
 connectDB();
 
@@ -29,7 +30,7 @@ app.use(express.json());
 //Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-// app.use("/api/tasks",taskRoutes);
+app.use("/api/tasks", taskRoutes);
 // app.use("/api/reports",reportRoutes);
 
 //Start Server

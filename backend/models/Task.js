@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const todoSchema = new mongoose.Schema({
   text: { type: String, required: true },
-  completed: { type: Boolean, defaykt: false },
+  completed: { type: Boolean, default: false },
 });
 
 const taskSchema = new mongoose.Schema(
@@ -16,7 +16,7 @@ const taskSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Pending", "In Progres", "Completed"],
+      enum: ["Pending", "In Progress", "Completed"],
       defaul: "Pending",
     },
     dueDate: { type: Date, required: true },
