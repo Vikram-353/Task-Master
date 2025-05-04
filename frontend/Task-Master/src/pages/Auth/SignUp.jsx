@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import AuthLayout from "../../components/layouts/AuthLayout";
 import Input from "../../components/Input/Input";
 import { useNavigate, Link } from "react-router-dom";
 import { validateEmail } from "../../utils/helper";
 import ProfilePhotoSelector from "../../components/layouts/ProfilePhotoSelector";
+import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
+// import UserDashboard from "../User/UserDashboard";
+import { UserContext } from "../../context/userContext";
+import uploadImage from "../../utils/uploadImage";
 
 function SignUp() {
   const [profilePic, setProfilePic] = useState(null);
@@ -12,16 +18,53 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [adminInviteToken, setAdminInviteToken] = useState("");
   const [error, setError] = useState(null);
+  const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
+
+    let profileImageUrl = "";
 
     if (!fullName.trim()) return setError("Full name is required.");
     if (!validateEmail(email)) return setError("Enter a valid email address.");
     if (!password) return setError("Password must be at least 8 characters.");
 
     setError("");
+    try {
+      //Upload Image if present
+      if (profilePic) {
+        const imageloadRes = await uploadImage(profilePic);
+        profileImageUrl = imageloadRes.imageUrl || "";
+      }
+      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+        name: fullName,
+        email,
+        password,
+        profileImageUrl,
+        adminInviteToken,
+      });
+
+      const { token, role } = response.data;
+
+      if (token) {
+        localStorage.setItem("token", token);
+        updateUser(response.data);
+
+        //redirect based on role
+        if (role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/user/dashboard");
+        }
+      }
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("Something went wrong. PLease trt again.");
+      }
+    }
   };
 
   return (

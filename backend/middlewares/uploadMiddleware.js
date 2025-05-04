@@ -3,8 +3,8 @@ import multer from "multer";
 //Configure storage
 
 const storage = multer.diskStorage({
-  designation: (req, file, cb) => {
-    cb(null, "../uploads/");
+  destination: (req, file, cb) => {
+    cb(null, "./uploads/");
   },
 
   filename: (req, file, cb) => {

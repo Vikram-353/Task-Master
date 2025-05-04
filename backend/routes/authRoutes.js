@@ -5,6 +5,7 @@ import {
   getUserProfile,
   updateUserProfile,
 } from "../controllers/authController.js";
+import multer from "multer";
 
 import { upload } from "../middlewares/uploadMiddleware.js";
 
