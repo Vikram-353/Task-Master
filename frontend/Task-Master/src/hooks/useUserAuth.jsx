@@ -10,7 +10,6 @@ export const useUserAuth = () => {
     if (loading) return;
 
     if (!user) {
-      clearUser(); // optional: only if it’s needed when user is null
       navigate("/login");
     }
   }, [user, loading, clearUser, navigate]);

@@ -1,9 +1,10 @@
 import React from "react";
 import { useUserAuth } from "../../hooks/useUserAuth";
+import DashboardLayout from "../../components/layouts/DashBoardLayout";
 
 function UserDashboard() {
   useUserAuth();
-  return <div>Dashboard</div>;
+  return <DashboardLayout>Dashboard</DashboardLayout>;
 }
 
 export default UserDashboard;
