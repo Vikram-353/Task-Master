@@ -8,6 +8,11 @@ import moment from "moment";
 import { UserContext } from "../../context/userContext";
 import { addThousandSeperator } from "../../utils/helper";
 import InfoCard from "../../components/Cards/InfoCard";
+import TaskListTable from "../../components/TaskListTable";
+import { LuArrowRight } from "react-icons/lu";
+import CustomPieChart from "../../components/Charts/CustomPieChart";
+
+const COLORS = ["#8D51FF", "#00B8DB", "#7BCE00"];
 
 function Dashboard() {
   useUserAuth();
@@ -17,6 +22,26 @@ function Dashboard() {
   const [pieChartData, setPieChartData] = useState([]);
   const [barChartData, setBarChartData] = useState([]);
 
+  //Prepare Chart DAta
+  const prepareChartData = (data) => {
+    const taskDistribution = data?.taskDistribution || null;
+    const taskPriorityLevels = data?.taskPriorityLevels || null;
+
+    const taskDistributionData = [
+      { status: "Pending", count: taskDistribution?.Pending || 0 },
+      { status: "In Progress", count: taskDistribution?.InProgress || 0 },
+      { status: "Completed", count: taskDistribution?.Completed || 0 },
+    ];
+    setPieChartData(taskDistributionData);
+    const PriorityLevelData = [
+      { priority: "Low", count: taskPriorityLevels?.Low || 0 },
+      { priority: "Medium", count: taskPriorityLevels?.Medium || 0 },
+      { priority: "High", count: taskPriorityLevels?.High || 0 },
+    ];
+
+    setBarChartData(PriorityLevelData);
+  };
+
   const getDashboardData = async () => {
     try {
       const response = await axiosInstance.get(
@@ -24,10 +49,15 @@ function Dashboard() {
       );
       if (response.data) {
         setDashboardData(response.data);
+        prepareChartData(response.data?.charts || null);
       }
     } catch (error) {
       console.error("Error fetching users", error);
     }
+  };
+
+  const onSeeMore = () => {
+    navigate("/admin/tasks");
   };
 
   useEffect(() => {
@@ -55,7 +85,7 @@ function Dashboard() {
             // icon={<IoMdCard />}
             label="Total Tasks"
             value={addThousandSeperator(
-              dashboardData?.charts?.taskDitribution?.All || 0
+              dashboardData?.charts?.taskDistribution?.All || 0
             )}
             color="bg-primary"
           ></InfoCard>
@@ -64,7 +94,7 @@ function Dashboard() {
             // icon={<IoMdCard />}
             label="Pending Tasks"
             value={addThousandSeperator(
-              dashboardData?.charts?.taskDitribution?.Pending || 0
+              dashboardData?.charts?.taskDistribution?.Pending || 0
             )}
             color="bg-violet-500"
           ></InfoCard>
@@ -73,7 +103,7 @@ function Dashboard() {
             // icon={<IoMdCard />}
             label="In Progress"
             value={addThousandSeperator(
-              dashboardData?.charts?.taskDitribution?.InProgress || 0
+              dashboardData?.charts?.taskDistribution?.InProgress || 0
             )}
             color="bg-cyan-500"
           ></InfoCard>
@@ -82,7 +112,7 @@ function Dashboard() {
             // icon={<IoMdCard />}
             label="Completed"
             value={addThousandSeperator(
-              dashboardData?.charts?.taskDitribution?.Completed || 0
+              dashboardData?.charts?.taskDistribution?.Completed || 0
             )}
             color="bg-lime-500"
           ></InfoCard>
@@ -90,6 +120,19 @@ function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6">
+        <div>
+          <div className="card">
+            <div className="flex items-center justify-between">
+              <h5 className="font-medium">Task Distribution</h5>
+            </div>
+            <CustomPieChart
+              data={pieChartData}
+              label="Total Balance"
+              colors={COLORS}
+            ></CustomPieChart>
+          </div>
+        </div>
+
         <div className="md:col-span-2">
           <div className="card">
             <div className="flex items-center justify-between">
@@ -100,7 +143,7 @@ function Dashboard() {
             </div>
 
             <TaskListTable
-              tabelData={dashboardData?.recentTasks || []}
+              tableData={dashboardData?.recenttasks || []}
             ></TaskListTable>
           </div>
         </div>
