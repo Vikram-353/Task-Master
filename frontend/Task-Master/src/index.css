@@ -13,7 +13,7 @@
   }
   body {
     background-color: #fcfbfc;
-    overflow: hidden;
+    overflow: auto;
   }
 }
 
