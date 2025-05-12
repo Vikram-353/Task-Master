@@ -1,6 +1,5 @@
 export const BASE_URL = "http://localhost:8000";
 
-
 //utils/apiPath.js
 export const API_PATHS = {
   AUTH: {
@@ -9,7 +8,7 @@ export const API_PATHS = {
     GET_PROFILE: "/api/auth/profile",
   },
   USERS: {
-    GET_ALL_USERS: "api./users",
+    GET_ALL_USERS: "api/users",
     GET_USERS_BY_ID: (userId) => `api/users/${userId}`,
     CREATe_USER: "/api/users",
     UPDATE_USER: (userId) => `api/users/${userId}`,
