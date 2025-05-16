@@ -6,6 +6,7 @@ import {
   Outlet,
   Navigate,
 } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Login from "./pages/Auth/Login";
 import SignUp from "./pages/Auth/SignUp";
 import PrivateRoute from "./routes/PrivateRoute";
@@ -50,6 +51,15 @@ function App() {
           </Routes>
         </Router>
       </div>
+
+      <Toaster
+        toastOptions={{
+          className: "",
+          style: {
+            fontSize: "13px",
+          },
+        }}
+      />
     </UserProvider>
   );
 }

@@ -23,7 +23,7 @@ function CreateTasks() {
     priority: "Low",
     dueDate: null,
     assignedTo: [],
-    todoCheckList: [],
+    todoChecklist: [],
     attachments: [],
   });
 
@@ -32,7 +32,10 @@ function CreateTasks() {
   const [loading, setLoading] = useState(false);
   const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
   const handleValueChange = (key, value) => {
-    setTaskData((prevData) => ({ ...prevData, [key]: value }));
+    setTaskData((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   };
 
   const clearData = () => {
@@ -42,14 +45,66 @@ function CreateTasks() {
       priority: "Low",
       dueDate: null,
       assignedTo: [],
-      todoCheckList: [],
+      todoChecklist: [],
       attachments: [],
     });
   };
 
-  const createTask = async () => {};
+  const createTask = async () => {
+    setLoading(true);
+    try {
+      const todolist = taskData.todoChecklist?.map((item) => ({
+        text: item,
+        completed: false,
+      }));
+
+      const response = await axiosInstance.post(API_PATHS.TASKS.CREATE_TASK, {
+        ...taskData,
+        dueDate: new Date(taskData.dueDate).toISOString(),
+        todoChecklist: todolist,
+      });
+
+      toast.success("Task Created Successfully");
+
+      clearData();
+    } catch (error) {
+      console.error("Error creating task:", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
   const updateTask = async () => {};
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    setError(null);
+
+    if (!taskData.title.trim()) {
+      setError("Title is required ");
+      return;
+    }
+    if (!taskData.description.trim()) {
+      setError("Description is required ");
+      return;
+    }
+    if (!taskData.dueDate.trim()) {
+      setError("Due Date is required ");
+      return;
+    }
+    if (taskData.assignedTo?.length === 0) {
+      setError("Task is not assigned to any member");
+      return;
+    }
+    if (taskData.todoChecklist?.length === 0) {
+      setError("Add atleast one todo task");
+      return;
+    }
+
+    if (taskId) {
+      updateTask();
+      return;
+    }
+    createTask();
+  };
   const getTaskDetailsById = async () => {};
   const deleteTask = async () => {};
 
@@ -151,9 +206,9 @@ function CreateTasks() {
                 TODO Checklist
               </label>
               <TodoListInput
-                todoList={taskData?.todoCheckList}
+                todoList={taskData?.todoChecklist}
                 setTodoList={(value) =>
-                  handleValueChange("todoCheckList", value)
+                  handleValueChange("todoChecklist", value)
                 }
               ></TodoListInput>
             </div>
@@ -170,6 +225,18 @@ function CreateTasks() {
                   handleValueChange("attachments", value)
                 }
               ></AddAttachmentsInput>
+            </div>
+            {error && (
+              <p className="text-xs font-medium text-red-500">{error}</p>
+            )}
+            <div className="flex justify-end mt-7">
+              <button
+                className="add-btn"
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {taskId ? "UPDATE TASK" : "CREATE TASK"}
+              </button>
             </div>
           </div>
         </div>
