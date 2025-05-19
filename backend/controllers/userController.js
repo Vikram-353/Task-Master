@@ -11,22 +11,22 @@ export const getUser = async (req, res) => {
       users.map(async (user) => {
         const pendingTasks = await Task.countDocuments({
           assignedTo: user._id,
-          status: "pending",
+          status: "Pending",
         });
-        const inProgessTasks = await Task.countDocuments({
+        const inProgressTasks = await Task.countDocuments({
           assignedTo: user._id,
-          status: "inProgessTasks",
+          status: "In Progress",
         });
-        const completeTasks = await Task.countDocuments({
+        const completedTasks = await Task.countDocuments({
           assignedTo: user._id,
-          status: "completeTasks",
+          status: "Completed",
         });
 
         return {
           ...user._doc, //Include alln exixting user data
           pendingTasks,
-          inProgessTasks,
-          completeTasks,
+          inProgressTasks,
+          completedTasks,
         };
       })
     );

@@ -33,12 +33,15 @@ function App() {
               <Route path="/admin/dashboard" element={<Dashboard />} />
               <Route path="/admin/tasks" element={<ManageTasks />} />
               <Route path="/admin/create-task" element={<CreateTasks />} />
-              <Route path="/admin/user" element={<ManageUsers />} />
+              <Route path="/admin/users" element={<ManageUsers />} />
             </Route>
 
             {/* User Routes */}
             <Route element={<PrivateRoute allowedRoles={["user"]} />}>
-              <Route path="/user/dashboard" element={<UserDashboard />} />
+              <Route
+                path="/user/user-dashboard-data"
+                element={<UserDashboard />}
+              />
               <Route path="/user/my-tasks" element={<MyTasks />} />
               <Route
                 path="/user/task-detail/:id"

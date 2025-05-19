@@ -5,7 +5,8 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { LuFileSpreadsheet } from "react-icons/lu";
 import TaskStatusTabs from "../../components/layouts/TaskStatusTabs";
-import TaskCard from "../../components/Charts/TaskCards";
+import TaskCard from "../../components/Cards/TaskCards";
+import UserCard from "../../components/Cards/UserCard";
 
 function ManageTasks() {
   const [allTasks, setAllTasks] = useState([]);
@@ -35,14 +36,34 @@ function ManageTasks() {
   };
 
   const handleClick = (taskData) => {
-    navigate(`/amdin/create-task`, { state: { taskId: taskData._id } });
+    navigate(`/admin/create-task`, { state: { taskId: taskData._id } });
   };
 
-  const handleDownloadReport = async () => {};
+  const handleDownloadReport = async () => {
+    try {
+      const response = await axiosInstance.get(API_PATHS.REPORTS.EXPORT_TASKS, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "task_details.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading data:", error);
+      toast.error("Faild to download.");
+    }
+  };
+
   useEffect(() => {
     getAllTasks(filterStatus);
     return () => {};
   }, [filterStatus]);
+
   return (
     <DashBoardLayout activeMenu="Manage Tasks">
       <div className="my-5">
@@ -81,7 +102,7 @@ function ManageTasks() {
             <TaskCard
               key={item._id}
               title={item.title}
-              description={item.title}
+              description={item.description}
               priority={item.priority}
               progress={item.progress}
               status={item.status}

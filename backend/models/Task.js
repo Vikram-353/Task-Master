@@ -1,32 +1,66 @@
 import mongoose from "mongoose";
 
+// Define the schema for each checklist item
 const todoSchema = new mongoose.Schema({
-  text: { type: String, required: true },
-  completed: { type: Boolean, default: false },
+  text: {
+    type: String,
+    required: true,
+  },
+  completed: {
+    type: Boolean,
+    default: false,
+  },
 });
 
+// Define the main task schema
 const taskSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
-    description: { type: String },
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+    },
     priority: {
       type: String,
       enum: ["Low", "Medium", "High"],
-      defaul: "Medium",
+      default: "Medium",
     },
     status: {
       type: String,
       enum: ["Pending", "In Progress", "Completed"],
-      defaul: "Pending",
+      default: "Pending",
     },
-    dueDate: { type: Date, required: true },
-    assignedTo: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    attachments: [{ type: String }],
+    dueDate: {
+      type: Date,
+      required: true,
+    },
+    assignedTo: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    attachments: [
+      {
+        type: String,
+      },
+    ],
     todoChecklist: [todoSchema],
-    progress: { type: Number, defaul: 0 },
+    progress: {
+      type: Number,
+      default: 0,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true, // Adds createdAt and updatedAt fields automatically
+  }
 );
 
+// Export the Task model
 export default mongoose.model("Task", taskSchema);

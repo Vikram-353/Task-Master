@@ -10,6 +10,7 @@ function InfoCard({ icon, label, value, color }) {
           <span className="text-sm md:text-[15px] text-black font semibold">
             {value}
           </span>{" "}
+          {label}
         </p>
       </div>
     </div>

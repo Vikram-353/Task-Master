@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../components/layouts/DashBoardLayout";
 import { PRIORITY_DATA } from "../../utils/data";
 import axiosInstance from "../../utils/axiosInstance";
@@ -6,7 +6,9 @@ import { API_PATHS } from "../../utils/apiPaths";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
+import Modal from "../../components/Model";
 import { LuTrash2 } from "react-icons/lu";
+import DeleteAlert from "../../components/layouts/DeleteAlert";
 import SelectDropdown from "../../components/Input/SelectDropdown";
 import SelectUsers from "../../components/Input/SelectUsers";
 import TodoListInput from "../../components/Input/TodoListInput";
@@ -74,22 +76,54 @@ function CreateTasks() {
       setLoading(false);
     }
   };
-  const updateTask = async () => {};
+  const updateTask = async () => {
+    setLoading(true);
+    try {
+      const todolist = taskData.todoChecklist?.map((item) => {
+        const prevTodoChecklist = currentTask?.todoChecklist || [];
+        const matchedTask = prevTodoChecklist.find((task) => task.text);
+
+        return {
+          text: item,
+          completed: matchedTask ? matchedTask.completed : false,
+        };
+      });
+
+      const response = await axiosInstance.put(
+        API_PATHS.TASKS.UPDATE_TASK(taskId),
+        {
+          ...taskData,
+          dueDate: new Date(taskData.dueDate).toString(),
+          todoChecklist: todolist,
+        }
+      );
+
+      toast.success("Task Update Successfully");
+    } catch (error) {
+      console.error("Error creating task", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async () => {
     setError(null);
 
-    if (!taskData.title.trim()) {
-      setError("Title is required ");
+    if (!taskData.title || !taskData.title.trim()) {
+      setError("Title is required");
       return;
     }
-    if (!taskData.description.trim()) {
+
+    if (!taskData.description || !taskData.description.trim()) {
       setError("Description is required ");
       return;
     }
-    if (!taskData.dueDate.trim()) {
+    if (!taskData.dueDate || !String(taskData.dueDate).trim()) {
       setError("Due Date is required ");
       return;
     }
+
     if (taskData.assignedTo?.length === 0) {
       setError("Task is not assigned to any member");
       return;
@@ -105,8 +139,61 @@ function CreateTasks() {
     }
     createTask();
   };
-  const getTaskDetailsById = async () => {};
-  const deleteTask = async () => {};
+  const getTaskDetailsById = async () => {
+    try {
+      const response = await axiosInstance.get(
+        API_PATHS.TASKS.GET_TASK_BY_ID(taskId)
+      );
+
+      console.log(response.data);
+
+      if (response.data) {
+        const taskInfo = response.data;
+        setCurrentTask(taskInfo);
+
+        setTaskData((prevState) => ({
+          title: taskInfo.title,
+          description: taskInfo.description,
+          dueDate: taskInfo.dueDate
+            ? moment(taskInfo.dueDate).format("YYYY-MM-DD")
+            : null,
+          priority: taskInfo.priority,
+          assignedTo: taskInfo?.assignedTo?.map((item) => item?._id) || [],
+          todoChecklist:
+            taskInfo.todoChecklist?.map((item) => item?.text) || [],
+          attachments: taskInfo?.attachments || [],
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+  const deleteTask = async () => {
+    if (!taskId) {
+      console.error("Task ID is missing. Cannot delete.");
+      return;
+    }
+    try {
+      await axiosInstance.delete(API_PATHS.TASKS.DELETE_TASK(taskId));
+
+      setOpenDeleteAlert(false);
+      toast.success("Expense details deleted successfully");
+      navigate("/admin/tasks");
+    } catch (error) {
+      console.error(
+        "Error deleting expense:",
+        error.response?.data?.message || error.message
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (taskId) {
+      getTaskDetailsById(taskId);
+    }
+
+    return () => {};
+  }, [taskId]);
 
   return (
     <DashboardLayout activeMenu="Create Tasks">
@@ -115,7 +202,7 @@ function CreateTasks() {
           <div className="form-card col-span-3">
             <div className="flex items-center justify-between">
               <h2 className="text-xl md:text-xl font-medium">
-                {taskId ? "Update Taks" : "Create Task"}
+                {taskId ? "Update Task" : "Create Task"}
               </h2>
               {taskId && (
                 <button
@@ -134,7 +221,7 @@ function CreateTasks() {
                 type="text"
                 placeholder="Create UI"
                 className="form-input"
-                value={taskData.title}
+                value={taskData.title || ""}
                 onChange={({ target }) =>
                   handleValueChange("title", target.value)
                 }
@@ -142,7 +229,9 @@ function CreateTasks() {
             </div>
 
             <div className="mt-3">
-              <label className="text-xs font-medium text-slate-600"></label>
+              <label className="text-xs font-medium text-slate-600">
+                Task Description
+              </label>
 
               <textarea
                 name=""
@@ -150,7 +239,7 @@ function CreateTasks() {
                 placeholder="describe task"
                 className="font-input"
                 rows={4}
-                value={taskData.description}
+                value={taskData.description || ""}
                 onChange={({ target }) =>
                   handleValueChange("description", target.value)
                 }
@@ -165,7 +254,7 @@ function CreateTasks() {
 
                 <SelectDropdown
                   options={PRIORITY_DATA}
-                  value={taskData.priority}
+                  value={taskData.priority || ""}
                   onChange={(value) => handleValueChange("priority", value)}
                   placeholder="Select Priority"
                 ></SelectDropdown>
@@ -192,7 +281,7 @@ function CreateTasks() {
                 </label>
 
                 <SelectUsers
-                  selectedUsers={taskData.assignedTo}
+                  selectedUsers={taskData.assignedTo || []}
                   setSelectedUsers={(value) => {
                     handleValueChange("assignedTo", value);
                   }}
@@ -206,7 +295,7 @@ function CreateTasks() {
                 TODO Checklist
               </label>
               <TodoListInput
-                todoList={taskData?.todoChecklist}
+                todoList={taskData?.todoChecklist || []}
                 setTodoList={(value) =>
                   handleValueChange("todoChecklist", value)
                 }
@@ -214,10 +303,9 @@ function CreateTasks() {
             </div>
 
             <div className="mt-3">
-              <label
-                htmlFor=""
-                className="text-xs font-medium text-slate-600"
-              ></label>
+              <label htmlFor="" className="text-xs font-medium text-slate-600">
+                Attachments
+              </label>
 
               <AddAttachmentsInput
                 attachments={taskData?.attachments}
@@ -241,6 +329,17 @@ function CreateTasks() {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={openDeleteAlert}
+        onClose={() => setOpenDeleteAlert(false)}
+        title="Delete tasks "
+      >
+        <DeleteAlert
+          content="Are you sure you want to delete this task?"
+          onDelete={() => deleteTask()}
+        ></DeleteAlert>
+      </Modal>
     </DashboardLayout>
   );
 }

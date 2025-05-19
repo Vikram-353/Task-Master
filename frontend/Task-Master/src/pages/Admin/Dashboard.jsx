@@ -67,8 +67,8 @@ function Dashboard() {
     return () => {};
   }, []);
   return (
-    <DashboardLayout activeMenu="dashboard">
-      <div className="card my-5">
+    <DashboardLayout activeMenu="Dashboard">
+      <div className="card my-5 ">
         <div>
           <div className="col-span-3">
             <h2 className="text-xl md:text-2xl ">Good Morning! {user?.name}</h2>

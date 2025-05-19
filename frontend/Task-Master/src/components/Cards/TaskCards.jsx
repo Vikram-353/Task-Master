@@ -32,7 +32,7 @@ function TaskCards({
     switch (priority) {
       case "Low":
         return "text-emerald-500 bg-emerald-50 border border-emerald-500/10";
-      case "Completed":
+      case "High":
         return "text-amber-500 bg-amber-50 border border-amber-500/10";
       default:
         return "text-rose-500 bg-rose-50 border border-rose-500/10";
@@ -47,10 +47,12 @@ function TaskCards({
         <div
           className={`text-[11px] font-medium ${getStatusTagColor()} px-4 py-0.5 rounded`}
         >
-          {status || "Pending"}
+          {status || "In Progress"}
         </div>
-        <div className={`text-[11px] font-medium ${getPriorutyTagColor()}`}>
-          {priority} Priority
+        <div
+          className={`text-[11px] font-medium ${getPriorutyTagColor()}  px-4 py-0.5 rounded`}
+        >
+          {priority || "Medium"}
         </div>
       </div>
 
