@@ -68,92 +68,94 @@ function Dashboard() {
   }, []);
   return (
     <DashboardLayout activeMenu="Dashboard">
-      <div className="card my-5 ">
-        <div>
-          <div className="col-span-3">
-            <h2 className="text-xl md:text-2xl ">Good Morning! {user?.name}</h2>
-            <p className="text-xs md:text-[13px] text-gray-400 mt-1.5">
-              {moment().format("dddd Do MMM YYYY")}
-            </p>
+      <div className="mt-5">
+        <div className="card my-5 ">
+          <div>
+            <div className="col-span-3">
+              <h2 className="text-xl md:text-2xl ">Good Day! {user?.name}</h2>
+              <p className="text-xs md:text-[13px] text-gray-400 mt-1.5">
+                {moment().format("dddd Do MMM YYYY")}
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div
-          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3
+          <div
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3
         md:gap-6 mt-5"
-        >
-          <InfoCard
-            // icon={<IoMdCard />}
-            label="Total Tasks"
-            value={addThousandSeperator(
-              dashboardData?.charts?.taskDistribution?.All || 0
-            )}
-            color="bg-primary"
-          ></InfoCard>
+          >
+            <InfoCard
+              // icon={<IoMdCard />}
+              label="Total Tasks"
+              value={addThousandSeperator(
+                dashboardData?.charts?.taskDistribution?.All || 0
+              )}
+              color="bg-primary"
+            ></InfoCard>
 
-          <InfoCard
-            // icon={<IoMdCard />}
-            label="Pending Tasks"
-            value={addThousandSeperator(
-              dashboardData?.charts?.taskDistribution?.Pending || 0
-            )}
-            color="bg-violet-500"
-          ></InfoCard>
+            <InfoCard
+              // icon={<IoMdCard />}
+              label="Pending Tasks"
+              value={addThousandSeperator(
+                dashboardData?.charts?.taskDistribution?.Pending || 0
+              )}
+              color="bg-violet-500"
+            ></InfoCard>
 
-          <InfoCard
-            // icon={<IoMdCard />}
-            label="In Progress"
-            value={addThousandSeperator(
-              dashboardData?.charts?.taskDistribution?.InProgress || 0
-            )}
-            color="bg-cyan-500"
-          ></InfoCard>
+            <InfoCard
+              // icon={<IoMdCard />}
+              label="In Progress"
+              value={addThousandSeperator(
+                dashboardData?.charts?.taskDistribution?.InProgress || 0
+              )}
+              color="bg-cyan-500"
+            ></InfoCard>
 
-          <InfoCard
-            // icon={<IoMdCard />}
-            label="Completed"
-            value={addThousandSeperator(
-              dashboardData?.charts?.taskDistribution?.Completed || 0
-            )}
-            color="bg-lime-500"
-          ></InfoCard>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6">
-        <div>
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <h5 className="font-medium">Task Distribution</h5>
-            </div>
-            <CustomPieChart
-              data={pieChartData}
-              label="Total Balance"
-              colors={COLORS}
-            ></CustomPieChart>
-          </div>
-        </div>
-        <div>
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <h5 className="font-medium">Task Priority Levels</h5>
-            </div>
-            <CustomBarChart data={barChartData}></CustomBarChart>
+            <InfoCard
+              // icon={<IoMdCard />}
+              label="Completed"
+              value={addThousandSeperator(
+                dashboardData?.charts?.taskDistribution?.Completed || 0
+              )}
+              color="bg-lime-500"
+            ></InfoCard>
           </div>
         </div>
 
-        <div className="md:col-span-2">
-          <div className="card">
-            <div className="flex items-center justify-between">
-              <h5 className="text-lg">Recent Tasks</h5>
-              <button className="card-btn " onClick={onSeeMore}>
-                See All <LuArrowRight className="text-base"></LuArrowRight>
-              </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4 md:my-6">
+          <div>
+            <div className="card">
+              <div className="flex items-center justify-between">
+                <h5 className="font-medium">Task Distribution</h5>
+              </div>
+              <CustomPieChart
+                data={pieChartData}
+                label="Total Balance"
+                colors={COLORS}
+              ></CustomPieChart>
             </div>
+          </div>
+          <div>
+            <div className="card">
+              <div className="flex items-center justify-between">
+                <h5 className="font-medium">Task Priority Levels</h5>
+              </div>
+              <CustomBarChart data={barChartData}></CustomBarChart>
+            </div>
+          </div>
 
-            <TaskListTable
-              tableData={dashboardData?.recenttasks || []}
-            ></TaskListTable>
+          <div className="md:col-span-2">
+            <div className="card">
+              <div className="flex items-center justify-between">
+                <h5 className="text-lg">Recent Tasks</h5>
+                <button className="card-btn " onClick={onSeeMore}>
+                  See All <LuArrowRight className="text-base"></LuArrowRight>
+                </button>
+              </div>
+
+              <TaskListTable
+                tableData={dashboardData?.recenttasks || []}
+              ></TaskListTable>
+            </div>
           </div>
         </div>
       </div>

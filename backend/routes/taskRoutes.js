@@ -21,7 +21,7 @@ router.get("/", protect, getTasks);
 router.get("/:id", protect, getTasksById);
 router.post("/", protect, adminOnly, createTasks);
 router.put("/:id", protect, updateTask);
-router.post("/:id", protect, adminOnly, deleteTask);
+router.delete("/:id", protect, adminOnly, deleteTask);
 router.put("/:id/status", protect, updateTaskStatus);
 router.put("/:id/todo", protect, updateTaskChecklist);
 

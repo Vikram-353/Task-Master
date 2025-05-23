@@ -6,6 +6,7 @@ export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  // const { token } = localStorage.getItem("token");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -44,7 +45,9 @@ const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, loading, updateUser, clearUser }}>
+    <UserContext.Provider
+      value={{ user, loading, updateUser, clearUser, setUser }}
+    >
       {children}
     </UserContext.Provider>
   );

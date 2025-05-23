@@ -28,7 +28,7 @@ function TaskCards({
         return "text-violet-500 bg-violet-50 border border-violet-500/10";
     }
   };
-  const getPriorutyTagColor = () => {
+  const getPriorityTagColor = () => {
     switch (priority) {
       case "Low":
         return "text-emerald-500 bg-emerald-50 border border-emerald-500/10";
@@ -50,7 +50,7 @@ function TaskCards({
           {status || "In Progress"}
         </div>
         <div
-          className={`text-[11px] font-medium ${getPriorutyTagColor()}  px-4 py-0.5 rounded`}
+          className={`text-[11px] font-medium ${getPriorityTagColor()}  px-4 py-0.5 rounded`}
         >
           {priority || "Medium"}
         </div>
@@ -66,10 +66,10 @@ function TaskCards({
         }`}
       >
         <p className="text-sm font-medium text-gray-800 mt-4 line-clamp-2">
-          {title}{" "}
+          {title || "Untitled Task"}{" "}
         </p>
         <p className="text-xs text-gray-500 mt-1.5 line-clamp-2 leading-[18px]">
-          {description}
+          {description || "No description provided."}
         </p>
         <p className="text-[13px] text-gray-700/80 font-medium mt-2 leading-[18px]">
           TaskDone:{""}{" "}

@@ -18,6 +18,7 @@ import UserDashboard from "./pages/User/UserDashboard";
 import MyTasks from "./pages/User/MyTasks";
 import ViewTaskDetails from "./pages/User/ViewTaskDetails";
 import UserProvider, { UserContext } from "./context/userContext";
+// import RAG from "./pages/RAG";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
               <Route path="/admin/tasks" element={<ManageTasks />} />
               <Route path="/admin/create-task" element={<CreateTasks />} />
               <Route path="/admin/users" element={<ManageUsers />} />
+              {/* <Route path="/admin/ask" element={<RAG />} /> */}
             </Route>
 
             {/* User Routes */}
@@ -48,6 +50,7 @@ function App() {
                 element={<ViewTaskDetails />}
               />
               <Route path="/user/user" element={<ManageUsers />} />
+              {/* <Route path="/user/ask" element={<RAG />} /> */}
             </Route>
 
             <Route path="/" element={<Root />} />

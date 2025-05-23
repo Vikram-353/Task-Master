@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../components/layouts/DashBoardLayout";
 import { PRIORITY_DATA } from "../../utils/data";
@@ -76,6 +77,8 @@ function CreateTasks() {
       setLoading(false);
     }
   };
+
+  
   const updateTask = async () => {
     setLoading(true);
     try {

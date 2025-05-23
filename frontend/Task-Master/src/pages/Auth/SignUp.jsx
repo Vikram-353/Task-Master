@@ -4,10 +4,8 @@ import Input from "../../components/Input/Input";
 import { useNavigate, Link } from "react-router-dom";
 import { validateEmail } from "../../utils/helper";
 import ProfilePhotoSelector from "../../components/Input/ProfilePhotoSelector";
-import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
-// import UserDashboard from "../User/UserDashboard";
 import { UserContext } from "../../context/userContext";
 import uploadImage from "../../utils/uploadImage";
 
@@ -23,7 +21,6 @@ function SignUp() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-
     let profileImageUrl = "";
 
     if (!fullName.trim()) return setError("Full name is required.");
@@ -32,11 +29,11 @@ function SignUp() {
 
     setError("");
     try {
-      //Upload Image if present
       if (profilePic) {
         const imageloadRes = await uploadImage(profilePic);
         profileImageUrl = imageloadRes.imageUrl || "";
       }
+
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         name: fullName,
         email,
@@ -50,77 +47,70 @@ function SignUp() {
       if (token) {
         localStorage.setItem("token", token);
         updateUser(response.data);
-
-        //redirect based on role
-        if (role === "admin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/user/dashboard");
-        }
+        navigate(
+          role === "admin" ? "/admin/dashboard" : "/user/user-dashboard-data"
+        );
       }
     } catch (error) {
-      if (error.response && error.response.data.message) {
-        setError(error.response.data.message);
-      } else {
-        setError("Something went wrong. PLease trt again.");
-      }
+      setError(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
     }
   };
 
   return (
     <AuthLayout>
-      <div className="lg:w-[100%] h-3/4 md:h-full flex flex-col justify-center">
-        <h3 className="text-xl font-semibold text-black">Create an Account</h3>
-        <p className="text-xs text-slate-700 mt-[5px] mb-6">
-          Join us today by entering your details below
+      <div className="w-full h-full flex flex-col justify-center">
+        <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+          Create an Account
+        </h3>
+        <p className="text-sm text-gray-600 mb-6">
+          Join Task Manager by entering your details below
         </p>
 
-        <form onSubmit={handleSignup}>
-          <ProfilePhotoSelector
-            image={profilePic}
-            setImage={setProfilePic}
-          ></ProfilePhotoSelector>
-
+        <form onSubmit={handleSignup} className="space-y-4">
+          <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
           <Input
             value={fullName}
-            onChange={({ target }) => setFullName(target.value)}
+            onChange={(e) => setFullName(e.target.value)}
             label="Full Name"
             placeholder="John"
             type="text"
-          ></Input>
+          />
           <Input
             value={email}
-            onChange={({ target }) => setEmail(target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             label="Email Address"
-            placeholder="John@ex.com"
-            type="text"
-          ></Input>
+            placeholder="john@example.com"
+            type="email"
+          />
           <Input
             value={password}
-            onChange={({ target }) => setPassword(target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             label="Password"
-            placeholder="MIn 8 Characters"
+            placeholder="Min 8 Characters"
             type="password"
-          ></Input>
+          />
           <Input
             value={adminInviteToken}
-            onChange={({ target }) => setAdminInviteToken(target.value)}
+            onChange={(e) => setAdminInviteToken(e.target.value)}
             label="Admin Invite Token"
             placeholder="6 Digit Code"
             type="text"
-          ></Input>
+          />
 
-          {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
+          {error && <p className="text-red-500 text-xs">{error}</p>}
 
-          <button type="submit" className="btn-primary">
-            SignUP
+          <button type="submit" className="btn-primary w-full">
+            Sign Up
           </button>
 
-          <p>
-            Already have an account ?{" "}
-            <Link className="font-medium text-primary underline" to="/login">
+          <p className="text-sm text-center">
+            Already have an account?{" "}
+            <Link className="font-semibold text-primary underline" to="/login">
               Log In
-            </Link>{" "}
+            </Link>
           </p>
         </form>
       </div>

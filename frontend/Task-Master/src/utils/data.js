@@ -32,6 +32,12 @@ export const SIDE_MENU_DATA = [
     icon: LuUsers,
     path: "/admin/users",
   },
+  // {
+  //   id: "06",
+  //   label: "Ask doubt",
+  //   icon: LuClipboardCheck,
+  //   path: "/admin/ask",
+  // },
   {
     id: "05",
     label: "Logout",
@@ -53,6 +59,12 @@ export const SIDE_MENU_USER_DATA = [
     icon: LuClipboardCheck,
     path: "/user/my-tasks",
   },
+  // {
+  //   id: "05",
+  //   label: "Ask doubt",
+  //   icon: LuClipboardCheck,
+  //   path: "/user/ask",
+  // },
   {
     id: "03",
     label: "Logout",

@@ -12,7 +12,7 @@ function DashBoardLayout({ children, activeMenu }) {
     <div>
       <NavBar activeMenu={activeMenu} />
       {user && (
-        <div className="flex overflow-auto">
+        <div className="flex overflow-hidden">
           <div className="max-[1080px]:hidden">
             <SideMenu activeMenu={activeMenu} />
           </div>

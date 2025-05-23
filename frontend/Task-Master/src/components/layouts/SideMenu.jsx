@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { SIDE_MENU_DATA, SIDE_MENU_USER_DATA } from "../../utils/data";
 
 function SideMenu({ activeMenu }) {
-  const { user, setUser } = useContext(UserContext);
+  // const { user, setUser } = useContext(UserContext);
   const [sideMenuData, setSideMenuData] = useState([]);
+  const { user, clearUser } = useContext(UserContext);
+
   const navigate = useNavigate();
 
   const handleClick = (route) => {
@@ -17,8 +19,8 @@ function SideMenu({ activeMenu }) {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
-    setUser(null);
+    // localStorage./clear();
+    clearUser();
     navigate("/login");
   };
 
