@@ -33,11 +33,11 @@ function SideMenu({ activeMenu }) {
   }, [user?.role]);
 
   return (
-    <div className="w-64 h-[calc(100vh-61px)] bg-white border-r border-gray-200/50 sticky top-[61px] z-20">
+    <div className="w-64 h-[calc(100vh-px)] bg-white border-r border-gray-200/50 sticky top-[61px] z-20">
       <div className="flex flex-col items-center justify-center mb-7 pt-5">
         <div>
           <img
-            src={user?.profileImageUrl}
+            src={user?.profileImageUrl || null}
             alt="Profile"
             className="w-20 h-20 bg-slate-400 rounded-full"
           />

@@ -59,43 +59,92 @@ function Login() {
       }
     }
   };
+  // return (
+  //   <AuthLayout>
+  //     <div className="lg:w-[70%] h-3/4 md:h-full flex flex-col justify-center">
+  //       <h3 className="text-xl font-semibold text-black">Welcome Back</h3>
+  //       <p className="text-xs text-slate-700 mt-[5px] mb-6">
+  //         Please enter your details to log in
+  //       </p>
+
+  //       <form onSubmit={handleLogin}>
+  //         <Input
+  //           value={email}
+  //           onChange={({ target }) => setEmail(target.value)}
+  //           label="Email Address"
+  //           placeholder="john@ex.com"
+  //           type="text"
+  //         ></Input>
+  //         <Input
+  //           value={password}
+  //           onChange={({ target }) => setPassword(target.value)}
+  //           label="Password"
+  //           placeholder="Min 8 Characters"
+  //           type="password"
+  //         ></Input>
+
+  //         {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
+
+  //         <button type="submit" className="btn-primary">
+  //           Login
+  //         </button>
+
+  //         <p>
+  //           Don't have an account?{" "}
+  //           <Link className="font-medium text-primary underline" to="/signup">
+  //             Signup
+  //           </Link>{" "}
+  //         </p>
+  //       </form>
+  //     </div>
+  //   </AuthLayout>
+  // );
   return (
     <AuthLayout>
       <div className="lg:w-[70%] h-3/4 md:h-full flex flex-col justify-center">
-        <h3 className="text-xl font-semibold text-black">Welcome Back</h3>
-        <p className="text-xs text-slate-700 mt-[5px] mb-6">
-          Please enter your details to log in
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Welcome Back 👋
+        </h2>
+        <p className="text-sm text-gray-600 mb-6">
+          Enter your details to log in to your account
         </p>
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className="space-y-5">
           <Input
             value={email}
             onChange={({ target }) => setEmail(target.value)}
             label="Email Address"
-            placeholder="john@ex.com"
-            type="text"
-          ></Input>
+            placeholder="john@example.com"
+            type="email"
+          />
+
           <Input
             value={password}
             onChange={({ target }) => setPassword(target.value)}
             label="Password"
-            placeholder="Min 8 Characters"
+            placeholder="••••••••"
             type="password"
-          ></Input>
+          />
 
-          {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
+          {error && <p className="text-red-500 text-sm -mt-3">{error}</p>}
 
-          <button type="submit" className="btn-primary">
+          <button
+            type="submit"
+            className="w-full bg-primary text-white font-semibold py-2.5 rounded-md hover:bg-primary-dark transition"
+          >
             Login
           </button>
-
-          <p>
-            Don't have an account?{" "}
-            <Link className="font-medium text-primary underline" to="/signup">
-              Signup
-            </Link>{" "}
-          </p>
         </form>
+
+        <p className="text-sm text-center text-gray-600 mt-6">
+          Don't have an account?{" "}
+          <Link
+            className="font-medium text-primary underline hover:text-primary-dark"
+            to="/signup"
+          >
+            Sign up
+          </Link>
+        </p>
       </div>
     </AuthLayout>
   );

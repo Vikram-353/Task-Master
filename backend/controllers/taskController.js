@@ -85,37 +85,98 @@ export const getTasksById = async (req, res) => {
   }
 };
 
+// export const createTasks = async (req, res) => {
+//   try {
+//     const {
+//       title,
+//       description,
+//       priority,
+//       dueDate,
+//       assignedTo,
+//       todoChecklist,
+//       attachments,
+//     } = req.body;
+//     if (!Array.isArray(assignedTo)) {
+//       return res
+//         .status(400)
+//         .json({ message: "assignedTo must be an array of IDs" });
+//     }
+
+//     const task = await Task.create({
+//       title,
+//       description,
+//       priority,
+//       dueDate,
+//       assignedTo,
+//       createdBy: req.user._id,
+//       todoChecklist,
+//       attachments,
+//     });
+
+//     res.status(201).json({ message: "Task created successfully", task });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error ", error: error.message });
+//   }
+// };
+
 export const createTasks = async (req, res) => {
   try {
-    const {
-      title,
-      description,
-      priority,
-      dueDate,
-      assignedTo,
-      todoChecklist,
-      attachments,
-    } = req.body;
-    if (!Array.isArray(assignedTo)) {
+    const data = req.body;
+
+    // Check if it's an array of tasks or single task
+    if (Array.isArray(data)) {
+      // Multiple tasks
+      const tasksWithUser = data.map((task) => {
+        if (!Array.isArray(task.assignedTo)) {
+          throw new Error("assignedTo must be an array in each task");
+        }
+        return {
+          ...task,
+          createdBy: req.user._id,
+        };
+      });
+
+      const insertedTasks = await Task.insertMany(tasksWithUser);
+
+      return res.status(201).json({
+        message: `${insertedTasks.length} tasks created successfully`,
+        tasks: insertedTasks,
+      });
+    } else {
+      // Single task
+      const {
+        title,
+        description,
+        priority,
+        dueDate,
+        assignedTo,
+        todoChecklist,
+        attachments,
+      } = data;
+
+      if (!Array.isArray(assignedTo)) {
+        return res
+          .status(400)
+          .json({ message: "assignedTo must be an array of IDs" });
+      }
+
+      const task = await Task.create({
+        title,
+        description,
+        priority,
+        dueDate,
+        assignedTo,
+        createdBy: req.user._id,
+        todoChecklist,
+        attachments,
+      });
+
       return res
-        .status(400)
-        .json({ message: "assignedTo must be an array of IDs" });
+        .status(201)
+        .json({ message: "Task created successfully", task });
     }
-
-    const task = await Task.create({
-      title,
-      description,
-      priority,
-      dueDate,
-      assignedTo,
-      createdBy: req.user._id,
-      todoChecklist,
-      attachments,
-    });
-
-    res.status(201).json({ message: "Task created successfully", task });
   } catch (error) {
-    res.status(500).json({ message: "Server error ", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 

@@ -59,12 +59,6 @@ export const SIDE_MENU_USER_DATA = [
     icon: LuClipboardCheck,
     path: "/user/my-tasks",
   },
-  // {
-  //   id: "05",
-  //   label: "Ask doubt",
-  //   icon: LuClipboardCheck,
-  //   path: "/user/ask",
-  // },
   {
     id: "03",
     label: "Logout",

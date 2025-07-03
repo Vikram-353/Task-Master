@@ -35,11 +35,17 @@ export const registerUser = async (req, res) => {
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
+
+    const idx = Math.floor(Math.random() * 100) + 1; //generate a no. between 1 and 100
+    const randomAvatar = profileImageUrl
+      ? profileImageUrl
+      : `https://avatar.iran.liara.run/public/boy`;
+
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      profileImageUrl,
+      profileImageUrl: randomAvatar,
       role,
     });
 

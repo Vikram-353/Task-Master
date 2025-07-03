@@ -18,8 +18,9 @@ function NavBar({ activeMenu }) {
           <HiOutlineMenu className="text-2xl" />
         )}
       </button>
-      <h2 className="text-lg font-semibold">Task Manager</h2>
-
+      <h2 className="text-xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 drop-shadow-sm">
+        Task Manager
+      </h2>
       {openSideMenu && (
         <div className="fixed top-[61px] -ml-4 bg-white">
           <SideMenu activeMenu={activeMenu} />
